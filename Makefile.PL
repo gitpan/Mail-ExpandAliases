@@ -1,7 +1,7 @@
 package Mail::ExpandAliases;
 
 # ----------------------------------------------------------------------
-# $Id: Makefile.PL,v 1.3 2002/09/24 17:06:46 dlc Exp $
+# $Id: Makefile.PL,v 1.5 2002/12/16 13:25:33 dlc Exp $
 # ----------------------------------------------------------------------
 # Makefile.PL - Generate a Makefile
 # Copyright (C) 2002 darren chamberlain <darren@cpan.org>
@@ -22,22 +22,43 @@ package Mail::ExpandAliases;
 # ----------------------------------------------------------------------
 
 use strict;
-use vars qw($VERSION @EXE_FILES %PREREQ_PM %clean);
 
 use ExtUtils::MakeMaker;
 use File::Basename qw(basename);
 
-$VERSION   = sprintf "%.02f", 0.15;
-@EXE_FILES = ('expand-alias');
-%PREREQ_PM = ('IO::File');
-%clean     = ('FILES' => '$(DISTNAME)-$(VERSION).tar.gz');
+my $dist = '$(DISTNAME)-$(VERSION).tar.gz';
+my @EXE_FILES = ('expand-alias');
+my %PREREQ_PM = ('IO::File');
+my %clean     = ('FILES' => "$dist $dist.asc distdir");
+my %macro     = (
+    'GPG' => 'gpg',
+    'AUTHOR' => 'darren@cpan.org',
+    'SIGN'  => '--detach-sign --armor',
+);
 
 WriteMakefile(
-    NAME         => __PACKAGE__,
-    VERSION_FROM => basename($0),
-    EXE_FILES    => \@EXE_FILES,
-    PREREQ_PM    => \%PREREQ_PM,
-    clean        => \%clean,
+    NAME      => __PACKAGE__,
+    VERSION   => 0.44,
+    EXE_FILES => \@EXE_FILES,
+    PREREQ_PM => \%PREREQ_PM,
+    clean     => \%clean,
+    macro     => \%macro,
 );
+
+package MY;
+sub dist_dir {
+	my $self = shift;
+	my $stuff = $self->SUPER::dist_dir(@_);
+
+	return "$stuff\ttouch distdir\n\n";
+}
+
+sub postamble {
+    return <<'P';
+distsign :: $(DISTVNAME).tar$(SUFFIX)
+	$(GPG) $(SIGN) -u $(AUTHOR) $(DISTVNAME).tar$(SUFFIX)
+	@cat $(DISTVNAME).tar$(SUFFIX).asc
+P
+}
 
 __END__

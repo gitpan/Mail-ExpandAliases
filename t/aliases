@@ -1,7 +1,6 @@
 #
 # This aliases file contains several types of aliases:
 #   * normal aliases
-#   * include files (with :include: syntax)
 #   * programs (| /some/path)
 #   * files (/dev/null)
 #   * groups (multiple aliases)
@@ -25,6 +24,11 @@ crap:
         bjones,
         bjones2
 
-decode: /dev/null
+archive: /var/mail/archive, root
 redist: "| /path/to/redist"
-commits: :include: t/incfile
+
+silly: silly, stuff
+
+backslashed: \jones
+
+nothing: nothing

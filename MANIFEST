@@ -3,6 +3,8 @@ expand-alias
 ExpandAliases.pm
 Makefile.PL
 MANIFEST
+MANIFEST.SKIP
+README
 t/aliases
 t/aliases.t
 t/expand-alias.t

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # ----------------------------------------------------------------------
 # vim: set ft=perl: -*-cperl-*-
-# $Id: expand-alias.t,v 1.2 2002/09/24 17:06:08 dlc Exp $
+# $Id: expand-alias.t,v 1.3 2002/12/16 13:22:17 dlc Exp $
 # ----------------------------------------------------------------------
 
 use strict;
@@ -22,7 +22,7 @@ chomp ($result = `$cmd tjones`);
 ok($result, 'Tom_Jones@unresolvable.perl.org');
 
 chomp ($result = `$cmd redist`);
-ok($result, '"| /path/to/redist"');
+ok($result, '| /path/to/redist');
 
 chomp ($result = `$cmd jones`);
-ok($result, 'Tom_Jones@unresolvable.perl.org Barnaby_Jones@unresolvable.perl.org Bridget_Jones@unresolvable.perl.org Quincy_Jones@unresolvable.perl.org');
+ok($result, 'Barnaby_Jones@unresolvable.perl.org Bridget_Jones@unresolvable.perl.org Quincy_Jones@unresolvable.perl.org Tom_Jones@unresolvable.perl.org');
