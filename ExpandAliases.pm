@@ -1,7 +1,7 @@
 package Mail::ExpandAliases;
 
 # -------------------------------------------------------------------
-# $Id: ExpandAliases.pm,v 1.2 2002/09/24 11:01:16 dlc Exp $
+# $Id: ExpandAliases.pm,v 1.4 2002/09/24 17:06:46 dlc Exp $
 # -------------------------------------------------------------------
 # Mail::ExpandAliases - Expand aliases from /etc/aliases files 
 # Copyright (C) 2002 darren chamberlain <darren@cpan.org>
@@ -24,7 +24,7 @@ package Mail::ExpandAliases;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = 0.14;
+$VERSION = 0.15;
 
 use constant PARSED => 0;
 use constant CACHED => 1;
@@ -103,7 +103,8 @@ sub reload {
 
 package File::Aliases;
 use IO::File;
-use enum qw(FH BUFFER);
+use constant FH     => 0;
+use constant BUFFER => 1;
 
 # This package ensures that each read (i.e., calls to next() --
 # I'm too lazy to implement this as a tied file handle so it can
@@ -206,7 +207,7 @@ and requests should be reported via the appropriate queue at
 
 =head1 VERSION
 
-$Id: ExpandAliases.pm,v 1.2 2002/09/24 11:01:16 dlc Exp $
+$Id: ExpandAliases.pm,v 1.4 2002/09/24 17:06:46 dlc Exp $
 
 =head1 AUTHOR
 

@@ -1,14 +1,15 @@
 #!/usr/bin/perl -w
 # ----------------------------------------------------------------------
 # vim: set ft=perl: -*-cperl-*-
-# $Id: expand-alias.t,v 1.1.1.1 2002/09/24 10:57:00 dlc Exp $
+# $Id: expand-alias.t,v 1.2 2002/09/24 17:06:08 dlc Exp $
 # ----------------------------------------------------------------------
 
 use strict;
+use Config;
 use Test;
 
 my $result;
-my $cmd = "expand-alias -f t/aliases";
+my $cmd = "$Config{'perlpath'} -Mblib expand-alias -f t/aliases 2>/dev/null";
 
 BEGIN {
     plan test => 4;

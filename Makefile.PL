@@ -1,7 +1,7 @@
 package Mail::ExpandAliases;
 
 # ----------------------------------------------------------------------
-# $Id: Makefile.PL,v 1.2 2002/09/24 11:01:16 dlc Exp $
+# $Id: Makefile.PL,v 1.3 2002/09/24 17:06:46 dlc Exp $
 # ----------------------------------------------------------------------
 # Makefile.PL - Generate a Makefile
 # Copyright (C) 2002 darren chamberlain <darren@cpan.org>
@@ -27,7 +27,7 @@ use vars qw($VERSION @EXE_FILES %PREREQ_PM %clean);
 use ExtUtils::MakeMaker;
 use File::Basename qw(basename);
 
-$VERSION   = sprintf "%.02f", 0.14;
+$VERSION   = sprintf "%.02f", 0.15;
 @EXE_FILES = ('expand-alias');
 %PREREQ_PM = ('IO::File');
 %clean     = ('FILES' => '$(DISTNAME)-$(VERSION).tar.gz');
