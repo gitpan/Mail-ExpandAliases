@@ -1,9 +1,7 @@
 package Mail::ExpandAliases;
 
 # -------------------------------------------------------------------
-# $Id: ExpandAliases.pm,v 1.8 2002/12/16 13:22:08 dlc Exp $
-# -------------------------------------------------------------------
-# Mail::ExpandAliases - Expand aliases from /etc/aliases files 
+# Mail::ExpandAliases - Expand aliases from /etc/aliases files
 # Copyright (C) 2002 darren chamberlain <darren@cpan.org>
 #
 # This program is free software; you can redistribute it and/or
@@ -52,7 +50,7 @@ package Mail::ExpandAliases;
 use strict;
 use vars qw($VERSION $DEBUG @POSSIBLE_ALIAS_FILES);
 
-$VERSION = 0.15;
+$VERSION = 0.46;
 $DEBUG = 0 unless defined $DEBUG;
 @POSSIBLE_ALIAS_FILES = qw(/etc/aliases
                            /etc/mail/aliases
@@ -65,7 +63,7 @@ use constant FILE    => 2;  # "Main" aliases file
 
 # ----------------------------------------------------------------------
 # import(@files)
-# 
+#
 # Allow for compile-time additions to @POSSIBLE_ALIAS_FILES
 # ----------------------------------------------------------------------
 sub import {
@@ -167,8 +165,8 @@ sub init {
         my ($orig, $alias, @expandos);
 
         $orig = $line;
-        if ($line =~ s/^([^:]+)\s*:\s*//) {
-            $alias = lc $1;       
+        if ($line =~ s/^([^:\s]+)\s*:\s*//) {
+            $alias = lc $1;
             $self->debug("$. => '$alias'");
         }
         else {
@@ -177,7 +175,10 @@ sub init {
             next;
         }
 
-        @expandos = split /,\s*/, $line;
+        @expandos =
+            #grep !/^$alias$/,
+            map { s/^\s*//; s/\s*$//; $_ }
+            split /,/, $line;
 
         $self->debug($alias, map "\t$_", @expandos);
         $self->[ PARSED ]->{ $alias } = \@expandos;
@@ -206,21 +207,27 @@ sub expand {
         if (defined $self->[ CACHED ]->{ $lcname });
 
     if (@names = @{ $self->[ PARSED ]->{ $lcname } || [ ] }) {
+        my $c = $self->[ CACHED ]->{ $lcname } = [ ];
+
         for $n (@names) {
             $n =~ s/^[\s'"]*//g;
             $n =~ s/['"\s]*$//g;
             my $type = substr $n, 0, 1;
+
             if ($type eq '|' or $type eq '/') {
                 # |/path/to/program
                 # /path/to/mbox
                 $answers{ $n }++;
+                push @$c, $n;
             }
+
             elsif ($type eq ':') {
                 # :include:
                 #$n =~ s/:include:\s*//ig;
                 #$self->parse($n);
                 warn "Skipping include file $n\n";
             }
+
             elsif ($type eq '\\') {
                 # \foo
                 # literal, non-escaped value, useful for
@@ -230,10 +237,12 @@ sub expand {
                 # go to bar.
                 $n =~ s/^\\//;
                 $answers{ $n }++;
+                push @$c, $n;
             }
+
             else {
                 for ($self->expand($n, $original || $name)) {
-                    $answers{ $_ }++ 
+                    $answers{ $_ }++
                 }
             }
         }
@@ -262,6 +271,22 @@ sub reload {
     $self->parse;
 
     return $self;
+}
+
+# ----------------------------------------------------------------------
+# aliases()
+#
+# Lists the aliases.
+# In list context, returns an array;
+# in scalar context, returns a reference to an array.
+#
+# From a patch submitted by Thomas Kishel <tom@kishel.net>
+# ----------------------------------------------------------------------
+sub aliases {
+    my ($self, @answers);
+    $self = shift;
+    @answers = sort keys %{ $self->[ PARSED ] };
+    return wantarray ? @answers : \@answers;
 }
 
 package File::Aliases;
@@ -420,10 +445,6 @@ and the invoking user should not need this module to read their own
 Any other shortcomings, bugs, errors, or generally related complaints
 and requests should be reported via the appropriate queue at
 <http://rt.cpan.org/>.
-
-=head1 VERSION
-
-$Id: ExpandAliases.pm,v 1.8 2002/12/16 13:22:08 dlc Exp $
 
 =head1 AUTHOR
 

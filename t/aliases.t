@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
 # ----------------------------------------------------------------------
 # vim: set ft=perl:
-# $Id: aliases.t,v 1.5 2002/12/16 13:22:17 dlc Exp $
 # ----------------------------------------------------------------------
 # All email addresses in this file go to unresolvable.perl.org, which
 # I think I made up.  My apologies to Tom, Barnaby, Bridget, and Quincy
@@ -16,7 +15,7 @@ use Test::More;
 
 my ($aliases_file, $m, @a, $a);
 BEGIN {
-    plan tests => 15;
+    plan tests => 16;
 }
 
 use_ok("Mail::ExpandAliases");
@@ -95,3 +94,5 @@ $a = join ",", @a;
 is($a, "silly,stuff", "'silly' => '$a'");
 undef @a;
 
+@a = $m->expand("spacetest");
+is($a[0], "/dev/null", "'spacetest' => '$a[0]'");
