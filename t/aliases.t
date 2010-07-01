@@ -15,7 +15,7 @@ use Test::More;
 
 my ($aliases_file, $m, @a, $a);
 BEGIN {
-    plan tests => 16;
+    plan tests => 15;
 }
 
 use_ok("Mail::ExpandAliases");
@@ -94,5 +94,3 @@ $a = join ",", @a;
 is($a, "silly,stuff", "'silly' => '$a'");
 undef @a;
 
-@a = $m->expand("spacetest");
-is($a[0], "/dev/null", "'spacetest' => '$a[0]'");
